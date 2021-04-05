@@ -3,6 +3,7 @@
   using Microsoft.Practices.Unity;
 
   using Prism.Events;
+  using RazorEngine.Templating;
 
   /// <summary>Factory for creating the base unity container for this application.</summary>
   internal static class ContainerFactory

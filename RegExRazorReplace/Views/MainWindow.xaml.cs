@@ -13,6 +13,8 @@
     public MainWindow()
     {
       this.InitializeComponent();
+
+      this.DataContext = new MainWindowViewModel();
     }
 
     #endregion

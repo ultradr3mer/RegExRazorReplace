@@ -26,7 +26,6 @@
     private readonly ConcurrentQueue<ParseRequest> requests = new ConcurrentQueue<ParseRequest>();
 
     private readonly IRazorEngineService service;
-    private readonly object result;
     private bool running;
 
     private static readonly Type modelType = typeof(Match);
@@ -37,9 +36,9 @@
 
     /// <summary>Initializes a new instance of the <see cref="TemplateService" /> class.</summary>
     /// <param name="container">The container.</param>
-    public TemplateService(IUnityContainer container)
+    public TemplateService(IEventAggregator eventAggregator)
     {
-      this.eventAggregator = container.Resolve<IEventAggregator>();
+      this.eventAggregator = eventAggregator;
 
       this.service = IsolatedRazorEngineService.Create(TemplateService.SandboxCreator);
     }
@@ -51,9 +50,9 @@
     /// <summary>Parses the specified code and template.</summary>
     /// <param name="code">The code.</param>
     /// <param name="template">The template.</param>
-    public void Parse(string code, string regExPattern, string template)
+    public void Parse(string code, string regExPattern, string template, Guid callerId)
     {
-      this.requests.Enqueue(new ParseRequest(code, regExPattern, template));
+      this.requests.Enqueue(new ParseRequest(code, regExPattern, template, callerId));
 
       if (!this.running)
       {
@@ -107,7 +106,8 @@
           continue;
         }
 
-        var result = this.CompileTemplate(new ParseResult(), request);
+        var result = new ParseResult() { CallerId = request.CallerId };
+        result = this.CompileTemplate(result, request);
         result = RunRegex(result, request, (m, req, res) => this.RunTemplate(m, req, res));
 
         this.eventAggregator.GetEvent<ParseCompleted>().Publish(result);
@@ -131,7 +131,7 @@
       catch (Exception e)
       {
         result.IsValid = false;
-        result.TemplateDiagnostics = e.Message;
+        result.RazorDiagnostics = e.Message;
       }
 
       return result;
@@ -151,7 +151,7 @@
       catch (Exception e)
       {
         result.IsValid = false;
-        result.TemplateDiagnostics = e.Message;
+        result.RegExDiagnostics = e.Message;
       }
 
       return result;
@@ -174,7 +174,7 @@
       catch (Exception e)
       {
         result.IsValid = false;
-        result.TemplateDiagnostics = e.Message;
+        result.RazorDiagnostics = e.Message;
       }
 
       return match.Value;
