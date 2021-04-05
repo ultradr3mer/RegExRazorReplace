@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace AdvancedClipboard.Wpf.Composite
+namespace RegExRazorReplace.Composite
 {
   public class StringNullOrEmptyVisibilityConverter : IValueConverter
   {

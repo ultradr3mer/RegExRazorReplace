@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RegExRazorReplace.Views" 
-             xmlns:comp="clr-namespace:AdvancedClipboard.Wpf.Composite"
+             xmlns:comp="clr-namespace:RegExRazorReplace.Composite"
              mc:Ignorable="d" 
              d:DesignHeight="414.783" d:DesignWidth="546.957">
   <UserControl.Resources>

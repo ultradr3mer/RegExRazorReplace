@@ -3,21 +3,25 @@
   using Microsoft.Practices.Unity;
   using Prism.Commands;
   using Prism.Events;
-  using Prism.Mvvm;
+  using RegExRazorReplace.Composite;
   using RegExRazorReplace.Data;
   using RegExRazorReplace.Events;
+  using RegExRazorReplace.Extensions;
   using RegExRazorReplace.Services;
   using System;
   using System.Collections.Generic;
   using System.ComponentModel;
+  using System.Linq;
   using System.Windows.Input;
 
-  internal class MainWindowViewModel : BindableBase
+  internal class MainWindowViewModel : BaseViewModel
   {
-    private IUnityContainer container;
     #region Fields
 
+    private IUnityContainer container;
+
     private TemplateService templateService;
+    private SaveToHardDriveService saveService;
 
     #endregion Fields
 
@@ -26,8 +30,6 @@
     /// <summary>Initializes a new instance of the <see cref="MainWindowViewModel" /> class.</summary>
     public MainWindowViewModel()
     {
-      //this.PropertyChanged += this.MainWindowViewModelPropertyChanged;
-
       this.Initialize();
     }
 
@@ -56,28 +58,40 @@
       this.container = ContainerFactory.Create();
       this.templateService = container.Resolve<TemplateService>();
       var eventAggregator = container.Resolve<IEventAggregator>();
+      this.saveService = container.Resolve<SaveToHardDriveService>();
       eventAggregator.GetEvent<ParseCompleted>().Subscribe(this.HandleParseCompletedEvent, ThreadOption.UIThread);
 
       this.Input = "INSERT INTO <user>.AppCommand (ID, Name, Description, StatusID, ContextID) VALUES (N'4de409b0-49fe-4ffd-ae2e-31bc910a9feb', N'nGroup.Info.eEvolution.MiddleLayer.CommandManager.DPDZonenTabelleCommand', NULL, 0, 'f99ad222-9552-4fd2-806b-f9cb3b031036');";
 
-      var entry = container.Resolve<ParseEntryViewModel>();
-      entry.Name = "Guid Uppern";
-      entry.RegEx = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
-      entry.Razor = "@Model.Value.ToUpper()";
-      entry.MainWindowViewModel = this;
+      this.AddCommand = new DelegateCommand(this.AddCommandExecute);
 
-      var list = new List<ParseEntryViewModel>() {
-        entry
+      this.Load();
+    }
+
+    private void Load()
+    {
+      var data = this.saveService.Load()?.Entries ?? new List<ParseEntryData>()
+      {
+        new ParseEntryData() {
+          Name = "Guid Uppern",
+          RegEx = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+          Razor = "@Model.Value.ToUpper()" }
       };
 
-      Entries = new BindingList<ParseEntryViewModel>(list);
-
-      this.AddCommand = new DelegateCommand(this.AddCommandExecute);
+      this.Entries = new BindingList<ParseEntryViewModel>(data.Select(o => container.Resolve<ParseEntryViewModel>().GetWithDataModel(o)).ToList());
+      this.Entries.ListChanged += this.Entries_ListChanged;
     }
+
+    private void Entries_ListChanged(object sender, ListChangedEventArgs e)
+    {
+      var data = this.Entries.Select(o => o.WriteToDataModel()).ToList();
+      this.saveService.Save(new SaveData() { Entries = data });
+    }
+
 
     private void AddCommandExecute()
     {
-      var entry = container.Resolve<ParseEntryViewModel>();
+      var entry = container.Resolve<ParseEntryViewModel>().GetWithDataModel(new ParseEntryData());
       entry.MainWindowViewModel = this;
       this.Entries.Add(entry);
     }

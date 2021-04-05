@@ -1,6 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
+using RegExRazorReplace.Composite;
 using RegExRazorReplace.Data;
 using RegExRazorReplace.Events;
 using RegExRazorReplace.Services;
@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace RegExRazorReplace.ViewModels
 {
-  internal class ParseEntryViewModel : BindableBase
+  internal class ParseEntryViewModel : BaseViewModel<ParseEntryData>
   {
     #region Fields
 
