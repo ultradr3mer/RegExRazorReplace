@@ -1,19 +1,20 @@
 ﻿namespace RegExRazorReplace.ViewModels
 {
   using Microsoft.Practices.Unity;
+  using Prism.Commands;
   using Prism.Events;
   using Prism.Mvvm;
   using RegExRazorReplace.Data;
   using RegExRazorReplace.Events;
-  using RegExRazorReplace.Properties;
   using RegExRazorReplace.Services;
   using System;
   using System.Collections.Generic;
-  using System.Collections.ObjectModel;
   using System.ComponentModel;
+  using System.Windows.Input;
 
   internal class MainWindowViewModel : BindableBase
   {
+    private IUnityContainer container;
     #region Fields
 
     private TemplateService templateService;
@@ -30,9 +31,29 @@
       this.Initialize();
     }
 
+    #endregion Constructors
+
+    #region Properties
+
+    public ICommand AddCommand { get; set; }
+
+    public BindingList<ParseEntryViewModel> Entries { get; set; }
+
+    /// <summary>Gets or sets the input.</summary>
+    public string Input { get; set; }
+
+    public string Output { get; set; }
+
+    /// <summary>Gets or sets the result.</summary>
+    public string Result { get; set; }
+
+    #endregion Properties
+
+    #region Methods
+
     protected virtual void Initialize()
     {
-      var container = ContainerFactory.Create();
+      this.container = ContainerFactory.Create();
       this.templateService = container.Resolve<TemplateService>();
       var eventAggregator = container.Resolve<IEventAggregator>();
       eventAggregator.GetEvent<ParseCompleted>().Subscribe(this.HandleParseCompletedEvent, ThreadOption.UIThread);
@@ -50,25 +71,16 @@
       };
 
       Entries = new BindingList<ParseEntryViewModel>(list);
+
+      this.AddCommand = new DelegateCommand(this.AddCommandExecute);
     }
 
-    #endregion Constructors
-
-    #region Properties
-
-    /// <summary>Gets or sets the input.</summary>
-    public string Input { get; set; }
-
-    public string Output { get; set; }
-
-    /// <summary>Gets or sets the result.</summary>
-    public string Result { get; set; }
-
-    public BindingList<ParseEntryViewModel> Entries { get; set; }
-
-    #endregion Properties
-
-    #region Methods
+    private void AddCommandExecute()
+    {
+      var entry = container.Resolve<ParseEntryViewModel>();
+      entry.MainWindowViewModel = this;
+      this.Entries.Add(entry);
+    }
 
     /// <summary>Handles the parse completed event.</summary>
     /// <param name="result">The result data.</param>

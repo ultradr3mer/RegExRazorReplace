@@ -14,7 +14,7 @@
   </UserControl.Resources>
   <Expander IsExpanded="{Binding IsExpanded}">
     <Expander.Header>
-      <TextBox Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding Name}" FontSize="16" Margin="3" MinWidth="200"/>
+      <TextBox Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding Name}" FontSize="14" Margin="0" MinWidth="200" Foreground="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
     </Expander.Header>
     <Grid>
       <Grid.RowDefinitions>
@@ -42,6 +42,7 @@
         <Label Content="" FontFamily="Segoe MDL2 Assets" FontSize="24" />
         <TextBox Text="{Binding RazorDiagnostics}" TextWrapping="Wrap" Grid.Column="1" IsReadOnly="True" Margin="3" MaxHeight="200"/>
       </Grid>
+      <Button Content="Remove" HorizontalAlignment="Left" Grid.Row="4" Command="{Binding RemoveCommand}" Margin="3"/>
       <Button Content="Execute" HorizontalAlignment="Right" Grid.Row="4" Command="{Binding ExecuteCommand}" Margin="3"/>
     </Grid>
   </Expander>

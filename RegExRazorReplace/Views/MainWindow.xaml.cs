@@ -1,12 +1,10 @@
 ﻿namespace RegExRazorReplace.Views
 {
-  using System.ComponentModel;
-  using System.Windows;
-
+  using MahApps.Metro.Controls;
   using RegExRazorReplace.ViewModels;
 
   /// <summary>Interaction logic for MainWindow.xaml</summary>
-  public partial class MainWindow : Window
+  public partial class MainWindow : MetroWindow
   {
     #region Constructors
 
@@ -17,7 +15,7 @@
       this.DataContext = new MainWindowViewModel();
     }
 
-    #endregion
+    #endregion Constructors
 
     #region Properties
 
@@ -27,6 +25,6 @@
       get { return this.DataContext as MainWindowViewModel; }
     }
 
-    #endregion
+    #endregion Properties
   }
 }

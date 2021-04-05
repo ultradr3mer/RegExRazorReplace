@@ -24,6 +24,7 @@ namespace RegExRazorReplace.ViewModels
     {
       this.Id = Guid.NewGuid();
       this.ExecuteCommand = new DelegateCommand(this.ExecuteCommandExecute);
+      this.RemoveCommand = new DelegateCommand(this.RemoveCommandExecute);
       this.templateService = templateService;
       this.eventAggregator = eventAggregator;
 
@@ -52,6 +53,8 @@ namespace RegExRazorReplace.ViewModels
 
     public string RegExDiagnostics { get; set; }
 
+    public ICommand RemoveCommand { get; set; }
+
     #endregion Properties
 
     #region Methods
@@ -68,14 +71,18 @@ namespace RegExRazorReplace.ViewModels
 
     private void OnParseCompleted(ParseResult data)
     {
-      if(data.CallerId != this.Id)
+      if (data.CallerId != this.Id)
       {
         return;
       }
 
       this.RazorDiagnostics = data.RazorDiagnostics;
       this.RegExDiagnostics = data.RegExDiagnostics;
-      this.MainWindowViewModel.Output = data.Value;
+    }
+
+    private void RemoveCommandExecute()
+    {
+      this.MainWindowViewModel.Entries.Remove(this);
     }
 
     #endregion Methods
