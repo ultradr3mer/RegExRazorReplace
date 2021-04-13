@@ -8,7 +8,6 @@
   using RegExRazorReplace.Events;
   using RegExRazorReplace.Extensions;
   using RegExRazorReplace.Services;
-  using System;
   using System.Collections.Generic;
   using System.ComponentModel;
   using System.Linq;
@@ -20,7 +19,6 @@
 
     private IUnityContainer container;
 
-    private TemplateService templateService;
     private SaveToHardDriveService saveService;
 
     #endregion Fields
@@ -56,7 +54,6 @@
     protected virtual void Initialize()
     {
       this.container = ContainerFactory.Create();
-      this.templateService = container.Resolve<TemplateService>();
       var eventAggregator = container.Resolve<IEventAggregator>();
       this.saveService = container.Resolve<SaveToHardDriveService>();
       eventAggregator.GetEvent<ParseCompleted>().Subscribe(this.HandleParseCompletedEvent, ThreadOption.UIThread);
@@ -66,6 +63,26 @@
       this.AddCommand = new DelegateCommand(this.AddCommandExecute);
 
       this.Load();
+    }
+
+    private void AddCommandExecute()
+    {
+      var entry = container.Resolve<ParseEntryViewModel>().GetWithDataModel(new ParseEntryData());
+      entry.MainWindowViewModel = this;
+      this.Entries.Add(entry);
+    }
+
+    private void Entries_ListChanged(object sender, ListChangedEventArgs e)
+    {
+      var data = this.Entries.Select(o => o.WriteToDataModel()).ToList();
+      this.saveService.Save(new SaveData() { Entries = data });
+    }
+
+    /// <summary>Handles the parse completed event.</summary>
+    /// <param name="result">The result data.</param>
+    private void HandleParseCompletedEvent(ParseResult result)
+    {
+      this.Result = result.Value;
     }
 
     private void Load()
@@ -79,28 +96,13 @@
       };
 
       this.Entries = new BindingList<ParseEntryViewModel>(data.Select(o => container.Resolve<ParseEntryViewModel>().GetWithDataModel(o)).ToList());
+
+      foreach (var item in this.Entries)
+      {
+        item.MainWindowViewModel = this;
+      }
+
       this.Entries.ListChanged += this.Entries_ListChanged;
-    }
-
-    private void Entries_ListChanged(object sender, ListChangedEventArgs e)
-    {
-      var data = this.Entries.Select(o => o.WriteToDataModel()).ToList();
-      this.saveService.Save(new SaveData() { Entries = data });
-    }
-
-
-    private void AddCommandExecute()
-    {
-      var entry = container.Resolve<ParseEntryViewModel>().GetWithDataModel(new ParseEntryData());
-      entry.MainWindowViewModel = this;
-      this.Entries.Add(entry);
-    }
-
-    /// <summary>Handles the parse completed event.</summary>
-    /// <param name="result">The result data.</param>
-    private void HandleParseCompletedEvent(ParseResult result)
-    {
-      this.Result = result.Value;
     }
 
     #endregion Methods
