@@ -39,6 +39,9 @@
   <PropertyGroup>
     <StartupObject>RegExRazorReplace.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RegexRazor.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.4.4.0\lib\net45\ControlzEx.dll</HintPath>
@@ -192,6 +195,7 @@
     <Compile Include="Composite\StringNullOrEmptyVisibilityConverter.cs" />
     <Compile Include="Data\ParseEntryData.cs" />
     <Compile Include="Data\SaveData.cs" />
+    <Compile Include="Data\Selection.cs" />
     <Compile Include="Extensions\BaseViewModelExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensionMethods.cs" />
     <Compile Include="Services\SaveToHardDriveService.cs" />
@@ -256,7 +260,9 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="RegexRazor.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.3.0\build\Fody.targets" Condition="Exists('..\packages\Fody.6.3.0\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

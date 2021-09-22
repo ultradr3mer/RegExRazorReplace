@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using RegExRazorReplace.Data;
+using RegExRazorReplace.ViewModels;
+using System.Windows.Controls;
 
 namespace RegExRazorReplace.Views
 {
@@ -15,5 +17,21 @@ namespace RegExRazorReplace.Views
     }
 
     #endregion Constructors
+
+    #region Properties
+
+    private ParseEntryViewModel ViewModel { get => this.DataContext as ParseEntryViewModel; }
+
+    #endregion Properties
+
+    #region Methods
+
+    private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+      var selection = new Selection(RegEx.SelectedText, RegEx.SelectionStart, RegEx.SelectionLength);
+      this.ViewModel.RegexEscape(selection);
+    }
+
+    #endregion Methods
   }
 }

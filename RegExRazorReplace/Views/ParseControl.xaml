@@ -23,7 +23,7 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
-      <TextBox Grid.Row="0" Text="{Binding RegEx}" Margin="3" AcceptsReturn="True"/>
+      <TextBox Grid.Row="0" Text="{Binding RegEx}" Margin="3" Name="RegEx" AcceptsReturn="True"/>
       <Grid Grid.Row="1" Visibility="{Binding RegExDiagnostics, Converter={StaticResource StringNullOrEmptyBoolConverter}}">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto"/>
@@ -41,7 +41,10 @@
         <Label Content="" FontFamily="Segoe MDL2 Assets" FontSize="24" />
         <TextBox Text="{Binding RazorDiagnostics}" TextWrapping="Wrap" Grid.Column="1" IsReadOnly="True" Margin="3" MaxHeight="200"/>
       </Grid>
-      <Button Content="Remove" HorizontalAlignment="Left" Grid.Row="4" Command="{Binding RemoveCommand}" Margin="3"/>
+      <StackPanel Grid.Row="4" Orientation="Horizontal">
+        <Button Content="Remove" HorizontalAlignment="Left" Command="{Binding RemoveCommand}" Margin="3"/>
+        <Button Content="Escape Selected" HorizontalAlignment="Left" Click="Button_Click" Margin="3"/>
+      </StackPanel>
       <Button Content="Execute" HorizontalAlignment="Right" Grid.Row="4" Command="{Binding ExecuteCommand}" Margin="3"/>
     </Grid>
   </Expander>

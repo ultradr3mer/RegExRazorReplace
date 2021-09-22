@@ -31,6 +31,15 @@ namespace RegExRazorReplace.ViewModels
       Initialize();
     }
 
+    internal void RegexEscape(Selection selection)
+    {
+      var escapedText = System.Text.RegularExpressions.Regex.Escape(selection.SelectedText);
+
+      this.RegEx = this.RegEx.Substring(0, selection.SelectionStart) + 
+                    escapedText + 
+                    this.RegEx.Substring(selection.SelectionStart + selection.SelectionLength);
+    }
+
     #endregion Constructors
 
     #region Properties
