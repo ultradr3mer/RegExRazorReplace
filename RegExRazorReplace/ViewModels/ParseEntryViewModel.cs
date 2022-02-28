@@ -5,6 +5,7 @@ using RegExRazorReplace.Data;
 using RegExRazorReplace.Events;
 using RegExRazorReplace.Services;
 using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RegExRazorReplace.ViewModels
@@ -91,7 +92,10 @@ namespace RegExRazorReplace.ViewModels
 
     private void RemoveCommandExecute()
     {
-      this.MainWindowViewModel.Entries.Remove(this);
+      if(MessageBox.Show("Are You Sure", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+      {
+        this.MainWindowViewModel.Entries.Remove(this);
+      }
     }
 
     #endregion Methods
