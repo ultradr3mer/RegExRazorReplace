@@ -10,6 +10,8 @@
 
     public string RegEx { get; set; }
 
+    public string RazorNonMatch { get; set; }
+
     #endregion Properties
   }
 }

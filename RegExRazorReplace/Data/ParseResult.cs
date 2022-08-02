@@ -23,6 +23,8 @@ namespace RegExRazorReplace.Data
 
     public Guid CallerId { get; set; }
 
+    public string RazorNonMatchDiagnostics { get; set; }
+
     #endregion
   }
 }

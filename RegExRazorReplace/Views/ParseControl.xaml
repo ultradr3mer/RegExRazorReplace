@@ -21,6 +21,8 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
         <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
       <TextBox Grid.Row="0" Text="{Binding RegEx}" Margin="3" Name="RegEx" AcceptsReturn="True"/>
@@ -41,11 +43,20 @@
         <Label Content="" FontFamily="Segoe MDL2 Assets" FontSize="24" />
         <TextBox Text="{Binding RazorDiagnostics}" TextWrapping="Wrap" Grid.Column="1" IsReadOnly="True" Margin="3" MaxHeight="200"/>
       </Grid>
-      <StackPanel Grid.Row="4" Orientation="Horizontal">
+      <TextBox Grid.Row="4" Text="{Binding RazorNonMatch}" Margin="3" AcceptsReturn="True"/>
+      <Grid Grid.Row="5" Visibility="{Binding RazorNonMatchDiagnostics, Converter={StaticResource StringNullOrEmptyBoolConverter}}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="" FontFamily="Segoe MDL2 Assets" FontSize="24" />
+        <TextBox Text="{Binding RazorNonMatchDiagnostics}" TextWrapping="Wrap" Grid.Column="1" IsReadOnly="True" Margin="3" MaxHeight="200"/>
+      </Grid>
+      <StackPanel Grid.Row="6" Orientation="Horizontal">
         <Button Content="Remove" HorizontalAlignment="Left" Command="{Binding RemoveCommand}" Margin="3"/>
         <Button Content="Escape Selected" HorizontalAlignment="Left" Click="Button_Click" Margin="3"/>
       </StackPanel>
-      <Button Content="Execute" HorizontalAlignment="Right" Grid.Row="4" Command="{Binding ExecuteCommand}" Margin="3"/>
+      <Button Content="Execute" HorizontalAlignment="Right" Grid.Row="6" Command="{Binding ExecuteCommand}" Margin="3"/>
     </Grid>
   </Expander>
   <!--<Grid>

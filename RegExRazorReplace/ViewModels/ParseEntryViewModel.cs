@@ -65,6 +65,10 @@ namespace RegExRazorReplace.ViewModels
 
     public ICommand RemoveCommand { get; set; }
 
+    public string RazorNonMatchDiagnostics { get; set; }
+
+    public string RazorNonMatch { get; set; }
+
     #endregion Properties
 
     #region Methods
@@ -76,7 +80,7 @@ namespace RegExRazorReplace.ViewModels
 
     private void ExecuteCommandExecute()
     {
-      this.templateService.Parse(this.MainWindowViewModel.Input, RegEx, Razor, this.Id);
+      this.templateService.Parse(this.MainWindowViewModel.Input, RegEx, Razor, RazorNonMatch, this.Id);
     }
 
     private void OnParseCompleted(ParseResult data)
@@ -88,6 +92,7 @@ namespace RegExRazorReplace.ViewModels
 
       this.RazorDiagnostics = data.RazorDiagnostics;
       this.RegExDiagnostics = data.RegExDiagnostics;
+      this.RazorNonMatchDiagnostics = data.RazorNonMatchDiagnostics;
     }
 
     private void RemoveCommandExecute()
