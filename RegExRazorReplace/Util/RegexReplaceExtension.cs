@@ -36,7 +36,7 @@ namespace RegExRazorReplace.Util
 
         result.Add(new ReplaceSegmentData(isFirst: matchIndex == 0,
                                           isLast: false,
-                                          content: text));
+                                          content: text.Substring(index, match.Index - index)));
 
         result.Add(new ReplaceMatchSegmentData(isFirst: matchIndex == 0,
                                                isLast: matchIndex == matchCollection.Count - 1,
